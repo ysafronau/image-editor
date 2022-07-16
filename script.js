@@ -5,12 +5,16 @@ const filterOptions = document.querySelectorAll('.filter button');
 const filterName = document.querySelector(".filter-info .name");
 const filterValue = document.querySelector(".filter-info .value");
 const filterSlider = document.querySelector('.slider input');
+const rotateOptions = document.querySelectorAll('.rotate button');
 
 
 let brightness = 100;
 let saturation = 100;
 let inversion = 0;
 let grayscale = 0;
+let rotate = 0;
+let flipHorizontal = 1; 
+let flipVertical = 1;
 
 function loadImage() {
     let file = fileInput.files[0];
@@ -20,6 +24,12 @@ function loadImage() {
         document.querySelector('.container').classList.remove('disable');
     })
 }
+
+function applyFilters() {
+    previewImg.style.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`;
+    previewImg.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`;
+}
+
 
 filterOptions.forEach(option => {
     option.addEventListener('click', () => {
@@ -60,7 +70,26 @@ function updateFilter() {
     } else {
         grayscale = filterSlider.value;
     }
+    applyFilters()
 }
+
+rotateOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        if (option.id === 'left') {
+            rotate -= 90;
+        } else if (option.id === 'right') {
+            rotate += 90; 
+        } else if(option.id === 'horizontal') {
+            flipHorizontal = flipHorizontal === 1 ? -1 : 1;
+        } else {
+            flipVertical = flipVertical === 1 ? -1 : 1;
+        }
+        applyFilters()
+    })
+})
+
+
+
 
 fileInput.addEventListener('change', loadImage)
 chooseImgBtn.addEventListener('click', () => fileInput.click())
